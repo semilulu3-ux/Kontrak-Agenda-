@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { 
   AccountCard, 
   RulesCard, 
   ContractStatusCard, 
-  AttentionCard 
+  AttentionCard,
+  StatisticsCard // Import komponen baru
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
 import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X } from 'lucide-react';
@@ -228,6 +228,8 @@ const ContractFormModal: React.FC<ContractFormProps> = ({ onSubmit, onClose }) =
 const App: React.FC = () => {
   // --- Auth State ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard'); // New State for Sidebar Tabs
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
   
   // Controls if the modal form should be visible
   const [showContractModal, setShowContractModal] = useState(false);
@@ -244,7 +246,7 @@ const App: React.FC = () => {
     agendaNumber: "-" // Default value
   });
 
-  const [contractSteps] = useState<ContractStep[]>([
+  const [contractSteps, setContractSteps] = useState<ContractStep[]>([
     {
       key: '1',
       label: 'Ketentuan',
@@ -288,6 +290,15 @@ const App: React.FC = () => {
   };
 
   const handleCreateContract = (data: { agenda: string; price: string; benefit: string }) => {
+    // 1. Parse the numeric value from the price string (remove non-digits)
+    const numericPrice = parseInt(data.price.replace(/\D/g, ''), 10) || 0;
+
+    // 2. Logic: If price >= 2.560.000, change Agenda description
+    const agendaDescription = numericPrice >= 2560000 
+      ? 'Tiga paket Tiga pekerjaan' // REVISED: Updated text
+      : 'Satu paket satu penarikan';
+
+    // 3. Update User Account Data
     setUserAccount(prev => ({
       ...prev,
       agendaNumber: data.agenda,
@@ -295,6 +306,15 @@ const App: React.FC = () => {
       // Auto append % if missing
       benefit: data.benefit.includes('%') ? data.benefit : `${data.benefit}%`
     }));
+
+    // 4. Update Contract Steps dynamically based on price
+    setContractSteps(prevSteps => prevSteps.map(step => {
+      if (step.key === '3') { // Target the 'Agenda' step
+        return { ...step, description: agendaDescription };
+      }
+      return step;
+    }));
+
     setShowContractModal(false);
   };
 
@@ -327,7 +347,12 @@ const App: React.FC = () => {
             />
           )}
 
-          <Sidebar />
+          <Sidebar 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+          />
 
           {/* Main Content Area */}
           <main className="flex-1 flex flex-col w-full relative z-10 md:pl-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -335,7 +360,10 @@ const App: React.FC = () => {
              {/* Top Header */}
             <header className="px-8 py-10 md:px-12 flex flex-col md:flex-row md:items-start justify-between gap-8 border-b border-white/10 bg-black/20 backdrop-blur-md">
               <div className="flex items-center gap-6">
-                <button className="md:hidden text-white p-2 -ml-2 hover:bg-white/10 rounded-lg transition-colors">
+                <button 
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="md:hidden text-white p-2 -ml-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
                    <Menu />
                 </button>
                 
@@ -351,7 +379,7 @@ const App: React.FC = () => {
                 {/* Logo Text Block */}
                 <div className="flex flex-col justify-center">
                   <h1 className="text-4xl md:text-5xl font-serif font-bold text-white tracking-tight leading-none mb-2 drop-shadow-xl text-shadow-lg">
-                    KONTRAK AGENDA
+                    {activeTab === 'dashboard' ? 'KONTRAK AGENDA' : 'STATISTIK PERFORMA'}
                   </h1>
                   <div className="flex items-center gap-3">
                     <span className="h-[3px] w-12 bg-[#8B0000] shadow-[0_0_8px_#8B0000]"></span>
@@ -368,7 +396,7 @@ const App: React.FC = () => {
                 <div className="relative group w-full md:w-auto">
                   <input 
                     type="text" 
-                    placeholder="Search contract..." 
+                    placeholder="Search..." 
                     className="bg-black/40 border border-white/20 rounded-full px-5 py-3 pl-11 text-sm text-white placeholder-white/70 w-full md:w-64 focus:outline-none focus:border-white/50 focus:bg-black/60 transition-all shadow-lg backdrop-blur-md font-medium"
                   />
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 w-4 h-4 group-focus-within:text-white transition-colors" />
@@ -399,34 +427,38 @@ const App: React.FC = () => {
               </div>
             </header>
 
-            {/* Dashboard Grid */}
+            {/* Content Area Switches based on Active Tab */}
             <div className="p-6 md:p-12 flex-1 relative z-10 max-w-[1920px] mx-auto w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
-                
-                {/* Top Left: Account */}
-                <div className="h-full min-h-[300px]">
-                   <AccountCard 
-                     data={userAccount} 
-                     onOpenForm={() => setShowContractModal(true)} 
-                   />
-                </div>
+              
+              {activeTab === 'dashboard' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full animate-in fade-in zoom-in-95 duration-500">
+                  {/* Row 1: Account & Rules */}
+                  <div className="h-full min-h-[300px]">
+                     <AccountCard 
+                       data={userAccount} 
+                       onOpenForm={() => setShowContractModal(true)} 
+                     />
+                  </div>
+                  <div className="h-full min-h-[300px]">
+                     <RulesCard />
+                  </div>
 
-                {/* Top Right: Rules */}
-                <div className="h-full min-h-[300px]">
-                   <RulesCard />
+                  {/* Row 2: Contract Status & Attention */}
+                  <div className="h-full min-h-[300px]">
+                    <ContractStatusCard steps={contractSteps} />
+                  </div>
+                  <div className="h-full min-h-[300px]">
+                    <AttentionCard />
+                  </div>
                 </div>
+              )}
 
-                {/* Bottom Left: Contract Status */}
-                <div className="h-full min-h-[300px]">
-                  <ContractStatusCard steps={contractSteps} />
-                </div>
+              {activeTab === 'statistics' && (
+                 <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
+                    <StatisticsCard />
+                 </div>
+              )}
 
-                {/* Bottom Right: Attention */}
-                <div className="h-full min-h-[300px]">
-                  <AttentionCard />
-                </div>
-                
-              </div>
             </div>
           </main>
         </>
