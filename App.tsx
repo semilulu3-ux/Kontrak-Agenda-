@@ -27,6 +27,24 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
     }
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove non-numeric characters
+    let input = e.target.value.replace(/\D/g, '');
+    
+    // Limit to 8 digits (DDMMYYYY)
+    if (input.length > 8) input = input.slice(0, 8);
+
+    let formattedDate = input;
+    // Insert slashes
+    if (input.length > 4) {
+      formattedDate = `${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4)}`;
+    } else if (input.length > 2) {
+      formattedDate = `${input.slice(0, 2)}/${input.slice(2)}`;
+    }
+    
+    setData({ ...data, dob: formattedDate });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center relative z-50 px-4 py-10 w-full animate-in fade-in duration-700">
       <div className="max-w-md w-full bg-black/60 backdrop-blur-2xl p-8 md:p-10 rounded-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
@@ -67,17 +85,19 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
               </div>
            </div>
 
-           {/* 2. Tanggal Lahir */}
+           {/* 2. Tanggal Lahir - MANUAL FORMAT */}
            <div className="space-y-1">
               <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Tanggal lahir dan tahun</label>
               <div className="relative group">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
                 <input 
-                  type="date" 
+                  type="text" 
                   required
                   value={data.dob}
-                  onChange={e => setData({...data, dob: e.target.value})}
-                  className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3.5 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-yellow-500 focus:bg-black/60 transition-all font-medium [color-scheme:dark]"
+                  onChange={handleDateChange}
+                  maxLength={10}
+                  className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3.5 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-yellow-500 focus:bg-black/60 transition-all font-medium"
+                  placeholder="DD/MM/YYYY (Contoh: 08/08/1999)"
                 />
               </div>
            </div>
