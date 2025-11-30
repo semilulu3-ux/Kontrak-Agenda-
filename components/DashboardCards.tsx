@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck, Clock, CreditCard, Gift, Hash } from 'lucide-react';
+import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck, Clock, CreditCard, Gift, Hash, LogOut, ChevronRight, Info, Languages, Smartphone, Settings, CheckCircle2 } from 'lucide-react';
 import { UserAccount, ContractStep } from '../types';
 
 // --- Reusable Glass Card Container ---
@@ -114,7 +114,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
       {/* Custom Header within padding */}
       <div className="p-6 pb-0">
          <CardHeader 
-           title="Account" 
+           title="Akun" 
            onViewDetail={() => setShowDetail(true)}
          />
       </div>
@@ -131,7 +131,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
                   <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/item:opacity-20 transition-opacity">
                      <Users size={32} className="text-white" />
                   </div>
-                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">Member Name</p>
+                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">Nama Anggota</p>
                   <p className="text-xl md:text-2xl font-serif text-white font-bold tracking-wide truncate">
                     {data.name || '...'}
                   </p>
@@ -142,7 +142,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
                   <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/item:opacity-20 transition-opacity">
                      <Hash size={32} className="text-white" />
                   </div>
-                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">Agenda ID</p>
+                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">ID Agenda</p>
                   <p className="text-lg md:text-xl font-mono text-white font-medium tracking-wider">
                     {data.agendaNumber || '-'}
                   </p>
@@ -155,7 +155,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
              <div className="bg-gradient-to-br from-yellow-900/20 to-black rounded-2xl p-4 border border-yellow-500/30 relative group/price">
                 <div className="flex items-center gap-2 mb-2">
                    <CreditCard size={14} className="text-yellow-500" />
-                   <p className="text-[10px] text-yellow-500 uppercase tracking-[0.2em] font-bold">Package Price</p>
+                   <p className="text-[10px] text-yellow-500 uppercase tracking-[0.2em] font-bold">Harga Paket</p>
                 </div>
                 <p className="text-lg md:text-xl font-mono font-bold text-white truncate group-hover/price:text-yellow-400 transition-colors">
                    {data.price}
@@ -166,7 +166,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
              <div className="bg-gradient-to-br from-emerald-900/20 to-black rounded-2xl p-4 border border-emerald-500/30 relative group/benefit">
                 <div className="flex items-center gap-2 mb-2">
                    <Gift size={14} className="text-emerald-500" />
-                   <p className="text-[10px] text-emerald-500 uppercase tracking-[0.2em] font-bold">Benefit</p>
+                   <p className="text-[10px] text-emerald-500 uppercase tracking-[0.2em] font-bold">Keuntungan</p>
                 </div>
                 <p className="text-lg md:text-xl font-bold text-white group-hover/benefit:text-emerald-400 transition-colors">
                    {data.benefit}
@@ -212,7 +212,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
       <div className="mt-auto px-6 py-4 bg-white/5 border-t border-white/5 text-center">
         <p className="text-emerald-300 text-[10px] font-bold tracking-[0.15em] uppercase inline-flex items-center gap-2">
            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981] animate-pulse"></span>
-           Status: Active
+           Status: Aktif
         </p>
       </div>
 
@@ -404,7 +404,7 @@ export const AttentionCard: React.FC = () => {
 
           {/* Replaced manual header with CardHeader to use the same Dropdown Logic */}
           <CardHeader 
-            title="Attention" 
+            title="Perhatian" 
             className="text-3xl italic" 
             onViewDetail={() => setShowDetail(true)}
           />
@@ -603,8 +603,8 @@ export const StatisticsCard: React.FC = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h5 className="text-white/80 text-sm font-bold uppercase tracking-wide">Grafik {currentData.income.desc}</h5>
                   <div className="flex gap-4 text-[10px] uppercase font-bold text-white/40">
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-yellow-500"></div>Member Income</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-white/20"></div>Global Target</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-yellow-500"></div>Pendapatan Member</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-white/20"></div>Target Global</span>
                   </div>
                 </div>
 
@@ -643,10 +643,10 @@ export const StatisticsCard: React.FC = () => {
                            <Globe size={16} className="text-blue-400" />
                            Akumulasi Global
                         </h5>
-                        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Realtime Audience Growth ({currentData.followers.trend})</p>
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Pertumbuhan Peserta ({currentData.followers.trend})</p>
                      </div>
                      <div className="bg-blue-500/20 border border-blue-500/30 px-2 py-1 rounded text-[10px] text-blue-300 font-bold uppercase animate-pulse">
-                        Live Data
+                        Data Langsung
                      </div>
                   </div>
                   
@@ -692,7 +692,7 @@ export const StatisticsCard: React.FC = () => {
                   
                   {/* Region Overlay (Bottom Right) */}
                   <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-3 w-40 z-20">
-                     <p className="text-[9px] text-white/50 uppercase font-bold mb-2 tracking-widest border-b border-white/10 pb-1">Top Region</p>
+                     <p className="text-[9px] text-white/50 uppercase font-bold mb-2 tracking-widest border-b border-white/10 pb-1">Wilayah Teratas</p>
                      <div className="space-y-2">
                         <div className="flex justify-between items-center text-[10px] text-white">
                            <span>Indonesia</span>
@@ -835,7 +835,7 @@ export const RegulationsView: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-bold tracking-wider uppercase mb-1">Ketentuan dan Aturan</h2>
-                  <p className="text-xs text-white/50 tracking-[0.2em] uppercase">Gucci Legal Compliance</p>
+                  <p className="text-xs text-white/50 tracking-[0.2em] uppercase">Kepatuhan Hukum Gucci</p>
                 </div>
             </div>
 
@@ -862,7 +862,7 @@ export const RegulationsView: React.FC = () => {
 
             <div className="mt-16 pt-8 border-t border-white/10 text-center">
                <p className="text-[10px] text-white/40 uppercase tracking-widest font-medium">
-                 © 2016 – 2025 Guccio Gucci S.p.A. All Rights Reserved. <br/>
+                 © 2016 – 2025 Guccio Gucci S.p.A. Hak Cipta Dilindungi Undang-Undang. <br/>
                  SIAE Licence No. 2294/I/1936 & 5647/I/193
                </p>
             </div>
@@ -870,3 +870,270 @@ export const RegulationsView: React.FC = () => {
       </div>
     );
 };
+
+// --- 7. Help View ---
+export const HelpView: React.FC = () => {
+   return (
+      <div className="max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
+         
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* 1. Informasi Layanan */}
+            <Card className="flex flex-col gap-6">
+               <div className="flex items-center gap-4 border-b border-white/10 pb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                     <Info size={24} className="text-blue-400" />
+                  </div>
+                  <div>
+                     <h2 className="text-xl font-serif font-bold text-white tracking-wide">Informasi Layanan</h2>
+                     <p className="text-xs text-white/40 uppercase tracking-widest">Pusat Dukungan</p>
+                  </div>
+               </div>
+               
+               <div className="space-y-6">
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-white/20 transition-colors">
+                     <h4 className="text-white font-bold mb-2 flex items-center gap-2">
+                        <Clock size={16} className="text-yellow-500" />
+                        Layanan 24/7
+                     </h4>
+                     <p className="text-white/70 text-sm leading-relaxed">
+                        Tim dukungan kami tersedia setiap saat untuk membantu Anda menyelesaikan kendala teknis maupun operasional.
+                     </p>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-white/20 transition-colors">
+                     <h4 className="text-white font-bold mb-2 flex items-center gap-2">
+                        <Users size={16} className="text-emerald-500" />
+                        Advisor Profesional
+                     </h4>
+                     <p className="text-white/70 text-sm leading-relaxed">
+                        Anda akan didampingi oleh pembimbing resmi yang tersertifikasi untuk memastikan setiap langkah sesuai prosedur.
+                     </p>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-white/20 transition-colors">
+                     <h4 className="text-white font-bold mb-2 flex items-center gap-2">
+                        <ShieldCheck size={16} className="text-purple-500" />
+                        Keamanan & Privasi
+                     </h4>
+                     <p className="text-white/70 text-sm leading-relaxed">
+                        Data percakapan dan transaksi Anda dilindungi dengan enkripsi end-to-end standar Gucci Global.
+                     </p>
+                  </div>
+               </div>
+            </Card>
+
+            {/* 2. Ketentuan Sistem Penerapan Program */}
+            <Card className="flex flex-col gap-6">
+               <div className="flex items-center gap-4 border-b border-white/10 pb-4">
+                  <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                     <FileText size={24} className="text-red-400" />
+                  </div>
+                  <div>
+                     <h2 className="text-xl font-serif font-bold text-white tracking-wide">Ketentuan Sistem</h2>
+                     <p className="text-xs text-white/40 uppercase tracking-widest">Penerapan Program</p>
+                  </div>
+               </div>
+
+               <div className="space-y-4">
+                  <ul className="space-y-4">
+                     <li className="flex gap-3">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 shadow-[0_0_5px_red]"></span>
+                        <div className="text-white/80 text-sm leading-relaxed">
+                           <strong className="text-white block mb-1">Alokasi Tugas Otomatis</strong>
+                           Tugas diberikan secara acak oleh sistem berdasarkan tingkat keanggotaan dan riwayat performa.
+                        </div>
+                     </li>
+                     <li className="flex gap-3">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 shadow-[0_0_5px_red]"></span>
+                        <div className="text-white/80 text-sm leading-relaxed">
+                           <strong className="text-white block mb-1">Validasi Komisi</strong>
+                           Komisi hanya akan cair setelah seluruh rangkaian tugas dalam satu sesi (paket) diselesaikan sepenuhnya.
+                        </div>
+                     </li>
+                     <li className="flex gap-3">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 shadow-[0_0_5px_red]"></span>
+                        <div className="text-white/80 text-sm leading-relaxed">
+                           <strong className="text-white block mb-1">Batas Waktu</strong>
+                           Setiap tugas memiliki batas waktu pengerjaan. Keterlambatan dapat mempengaruhi nilai kredit akun.
+                        </div>
+                     </li>
+                     <li className="flex gap-3">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 shadow-[0_0_5px_red]"></span>
+                        <div className="text-white/80 text-sm leading-relaxed">
+                           <strong className="text-white block mb-1">Larangan Manipulasi</strong>
+                           Segala bentuk penggunaan bot, skrip, atau manipulasi data akan berakibat pada pembekuan akun permanen.
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </Card>
+
+         </div>
+
+         {/* Contact CTA */}
+         <div className="mt-8 bg-gradient-to-r from-yellow-900/40 to-black p-6 rounded-2xl border border-yellow-500/30 text-center">
+            <h3 className="text-white font-bold text-lg mb-2">Butuh Bantuan Lebih Lanjut?</h3>
+            <p className="text-white/60 text-sm mb-6 max-w-xl mx-auto">
+               Jika Anda mengalami kesulitan yang tidak tercakup dalam informasi di atas, silakan hubungi layanan pelanggan resmi kami.
+            </p>
+            <button className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-yellow-400 transition-colors uppercase tracking-wider text-xs shadow-lg">
+               Hubungi Layanan Pelanggan
+            </button>
+         </div>
+      </div>
+   );
+};
+
+// --- 8. Settings View ---
+interface SettingsViewProps {
+   onLogout: () => void;
+}
+
+export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
+   const [activeModal, setActiveModal] = useState<'none' | 'language' | 'about'>('none');
+   const [selectedLanguage, setSelectedLanguage] = useState('Bahasa Indonesia');
+
+   const handleLanguageSelect = (lang: string) => {
+     setSelectedLanguage(lang);
+     setActiveModal('none');
+   };
+
+   return (
+      <div className="max-w-2xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+         <Card className="flex flex-col gap-6">
+            <div className="flex items-center gap-4 mb-2 pb-4 border-b border-white/10">
+               <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                  <Settings size={24} className="text-white" />
+               </div>
+               <div>
+                  <h2 className="text-2xl font-serif font-bold text-white tracking-wide">Pengaturan Sistem</h2>
+                  <p className="text-xs text-white/40 uppercase tracking-widest">Preferensi & Akun</p>
+               </div>
+            </div>
+
+            {/* Language Setting */}
+            <div 
+               onClick={() => setActiveModal('language')}
+               className="bg-white/5 rounded-xl p-4 border border-white/10 flex items-center justify-between group hover:border-yellow-500/30 transition-all cursor-pointer"
+            >
+               <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400">
+                     <Languages size={20} />
+                  </div>
+                  <div>
+                     <h4 className="text-white font-bold text-sm">Ubah Bahasa</h4>
+                     <p className="text-white/40 text-xs">Pilih bahasa tampilan</p>
+                  </div>
+               </div>
+               <div className="flex items-center gap-3">
+                  <span className="text-white/80 text-sm font-medium">{selectedLanguage}</span>
+                  <ChevronRight size={16} className="text-white/30" />
+               </div>
+            </div>
+
+            {/* App Version */}
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10 flex items-center justify-between group hover:border-emerald-500/30 transition-all">
+               <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400">
+                     <Smartphone size={20} />
+                  </div>
+                  <div>
+                     <h4 className="text-white font-bold text-sm">Versi Aplikasi</h4>
+                     <p className="text-white/40 text-xs">Informasi sistem saat ini</p>
+                  </div>
+               </div>
+               <div className="text-right">
+                  <span className="block text-white/80 text-sm font-medium font-mono">v2.5.0 (Beta)</span>
+                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">Terbaru</span>
+               </div>
+            </div>
+
+            {/* Support Info */}
+            <div 
+               onClick={() => setActiveModal('about')}
+               className="bg-white/5 rounded-xl p-4 border border-white/10 flex items-center justify-between group hover:border-white/20 transition-all cursor-pointer"
+            >
+               <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20 text-purple-400">
+                     <Info size={20} />
+                  </div>
+                  <div>
+                     <h4 className="text-white font-bold text-sm">Tentang</h4>
+                     <p className="text-white/40 text-xs">Gucci Contract System</p>
+                  </div>
+               </div>
+               <ChevronRight size={16} className="text-white/30" />
+            </div>
+
+            {/* Logout Action */}
+            <div className="pt-6 mt-4 border-t border-white/10">
+               <button 
+                  onClick={onLogout}
+                  className="w-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group uppercase tracking-wider text-sm"
+               >
+                  <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+                  Keluar dari Akun
+               </button>
+               <p className="text-center text-[10px] text-white/30 mt-4">
+                  Sesi anda akan diakhiri dengan aman.
+               </p>
+            </div>
+         </Card>
+
+         {/* Language Modal */}
+         {activeModal === 'language' && (
+            <DetailModal title="Pilih Bahasa" onClose={() => setActiveModal('none')}>
+               <div className="space-y-2">
+                  {['Bahasa Indonesia', 'English (US)', '中文 (Chinese)'].map((lang) => (
+                     <button 
+                        key={lang}
+                        onClick={() => handleLanguageSelect(lang)}
+                        className={`w-full text-left p-4 rounded-xl border flex items-center justify-between transition-all ${
+                           selectedLanguage === lang 
+                           ? 'bg-yellow-500/10 border-yellow-500 text-yellow-500' 
+                           : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                        }`}
+                     >
+                        <span className="font-bold">{lang}</span>
+                        {selectedLanguage === lang && <CheckCircle2 size={20} />}
+                     </button>
+                  ))}
+               </div>
+            </DetailModal>
+         )}
+
+         {/* About Modal */}
+         {activeModal === 'about' && (
+            <DetailModal title="Tentang Aplikasi" onClose={() => setActiveModal('none')}>
+               <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-white rounded-2xl mx-auto flex items-center justify-center mb-4">
+                      <img 
+                        src="https://1000logos.net/wp-content/uploads/2017/01/Colors-Gucci-Logo.jpg" 
+                        className="w-16" 
+                        alt="Logo"
+                      />
+                  </div>
+                  <h3 className="text-xl font-serif font-bold text-white">Gucci Contract System</h3>
+                  <p className="text-white/50 text-sm">v2.5.0 (Beta)</p>
+               </div>
+               
+               <div className="space-y-4 text-white/80 text-sm leading-relaxed text-justify">
+                  <p>
+                     Gucci Contract System adalah platform manajemen agenda eksklusif yang dirancang untuk memfasilitasi koordinasi antara pengguna dan penasihat profesional. Aplikasi ini menyediakan transparansi penuh mengenai status kontrak, pendapatan, dan kepatuhan regulasi.
+                  </p>
+                  <p>
+                     Dikembangkan dengan standar keamanan tingkat tinggi untuk menjamin privasi dan integritas data seluruh anggota.
+                  </p>
+               </div>
+
+               <div className="mt-8 pt-6 border-t border-white/10 text-center">
+                  <p className="text-[10px] text-white/40 uppercase tracking-widest">
+                     © 2024 Guccio Gucci S.p.A.<br/>All rights reserved.
+                  </p>
+               </div>
+            </DetailModal>
+         )}
+      </div>
+   )
+}

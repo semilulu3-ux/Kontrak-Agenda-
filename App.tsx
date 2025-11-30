@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { 
@@ -7,7 +6,8 @@ import {
   ContractStatusCard, 
   AttentionCard,
   StatisticsCard,
-  RegulationsView 
+  RegulationsView,
+  SettingsView
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
 import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, Shield, CheckCircle2, ScanBarcode, Camera, Image as ImageIcon, Upload } from 'lucide-react';
@@ -160,7 +160,7 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
         </form>
 
         <div className="mt-8 text-center">
-          <p className="text-white/40 text-[10px] uppercase tracking-widest">Protected by Gucci Security System</p>
+          <p className="text-white/40 text-[10px] uppercase tracking-widest">Dilindungi oleh Sistem Keamanan Gucci</p>
         </div>
       </div>
     </div>
@@ -279,7 +279,7 @@ const ContractFormModal: React.FC<ContractFormProps> = ({ onSubmit, onClose }) =
   );
 };
 
-// --- User Profile Modal (Revised: Premium Member Card with Uploads) ---
+// --- Profile View (Standalone Page/Component) ---
 interface UserProfileModalProps {
   user: UserAccount;
   onClose: () => void;
@@ -287,7 +287,7 @@ interface UserProfileModalProps {
   onUpdateWallpaper: (url: string) => void;
 }
 
-const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUpdateProfileImage, onUpdateWallpaper }) => {
+const ProfileView: React.FC<UserProfileModalProps> = ({ user, onClose, onUpdateProfileImage, onUpdateWallpaper }) => {
   const profileInputRef = useRef<HTMLInputElement>(null);
   const wallpaperInputRef = useRef<HTMLInputElement>(null);
 
@@ -303,7 +303,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="w-full h-full flex items-center justify-center p-4 animate-in fade-in zoom-in-95 duration-500 min-h-[600px]">
       
       {/* Hidden File Inputs */}
       <input 
@@ -322,7 +322,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
       />
 
       {/* Card Container */}
-      <div className="w-full max-w-[420px] bg-[#0a0a0a] rounded-3xl overflow-hidden relative shadow-[0_20px_60px_rgba(0,0,0,0.9)] border border-yellow-500/30 animate-in zoom-in-95 duration-500 group">
+      <div className="w-full max-w-[420px] bg-[#0a0a0a] rounded-3xl overflow-hidden relative shadow-[0_20px_60px_rgba(0,0,0,0.9)] border border-yellow-500/30 group">
          
          {/* Background Effects */}
          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(60,60,60,1),rgba(10,10,10,1))] opacity-100"></div>
@@ -342,12 +342,12 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
 
                <div className="ml-auto flex flex-col items-end">
                   <h2 className="text-3xl font-serif font-bold text-white tracking-widest drop-shadow-md">GUCCI</h2>
-                  <p className="text-[8px] text-yellow-500 uppercase tracking-[0.4em] font-bold border-b border-yellow-500/50 pb-1 mt-1">Member Identity</p>
+                  <p className="text-[8px] text-yellow-500 uppercase tracking-[0.4em] font-bold border-b border-yellow-500/50 pb-1 mt-1">Identitas Anggota</p>
                </div>
             </div>
          </div>
 
-         {/* Close Button */}
+         {/* Close Button (Redirects to Dashboard) */}
          <button onClick={onClose} className="absolute top-4 left-4 text-white/30 hover:text-white transition-colors z-50">
             <X size={20} />
          </button>
@@ -399,7 +399,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
                      <ScanBarcode size={18} className="text-white/70" />
                   </div>
                   <div className="flex-1 border-b border-white/5 pb-2">
-                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">ID Number</p>
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Nomor ID</p>
                      <p className="text-sm font-mono text-white/90 tracking-wider">GC-{Math.floor(Math.random() * 1000000)}</p>
                   </div>
                </div>
@@ -409,7 +409,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
                      <Calendar size={18} className="text-white/70" />
                   </div>
                   <div className="flex-1 border-b border-white/5 pb-2">
-                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Date of Birth</p>
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Tanggal Lahir</p>
                      <p className="text-sm text-white/90 font-medium">{user.dob || '-'}</p>
                   </div>
                </div>
@@ -419,7 +419,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
                      <Phone size={18} className="text-white/70" />
                   </div>
                   <div className="flex-1 border-b border-white/5 pb-2">
-                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Phone Contact</p>
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Kontak Telepon</p>
                      <p className="text-sm text-white/90 font-medium">{user.phoneNumber || '-'}</p>
                   </div>
                </div>
@@ -429,7 +429,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
                      <MapPin size={18} className="text-white/70" />
                   </div>
                   <div className="flex-1 border-b border-white/5 pb-2">
-                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Residence</p>
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Domisili</p>
                      <p className="text-sm text-white/90 font-medium">{user.city || '-'}</p>
                   </div>
                </div>
@@ -453,13 +453,13 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUp
                   <div className="h-8 w-32 bg-white/90 p-1 mb-1">
                      <div className="h-full w-full bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png')] bg-contain bg-no-repeat opacity-80 mix-blend-multiply grayscale"></div>
                   </div>
-                  <p className="text-[8px] text-white/30 uppercase tracking-widest">Auth Code: 8849-2210</p>
+                  <p className="text-[8px] text-white/30 uppercase tracking-widest">Kode Otorisasi: 8849-2210</p>
                </div>
                
                <div className="text-right">
                    {/* Signature Effect */}
                    <p className="font-serif italic text-white/50 text-xl pr-2" style={{fontFamily: 'cursive'}}>Gucci Official</p>
-                   <p className="text-[8px] text-yellow-500 uppercase tracking-widest font-bold mt-1">Authorized Signature</p>
+                   <p className="text-[8px] text-yellow-500 uppercase tracking-widest font-bold mt-1">Tanda Tangan Sah</p>
                </div>
             </div>
 
@@ -482,7 +482,6 @@ const App: React.FC = () => {
   
   // Controls if the modal form should be visible
   const [showContractModal, setShowContractModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false); // Controls Profile Modal
   
   // Customization States
   const [bgImage, setBgImage] = useState("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop");
@@ -553,6 +552,18 @@ const App: React.FC = () => {
     setIsLoggedIn(true);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setActiveTab('dashboard'); // Reset tab
+    setLoginForm({ 
+      name: '', 
+      dob: '', 
+      phone: '', 
+      password: '', 
+      city: '' 
+    });
+  };
+
   const handleCreateContract = (data: { agenda: string; price: string; benefit: string }) => {
     // 1. Parse the numeric value from the price string (remove non-digits)
     const numericPrice = parseInt(data.price.replace(/\D/g, ''), 10) || 0;
@@ -595,6 +606,8 @@ const App: React.FC = () => {
      switch(activeTab) {
         case 'statistics': return 'STATISTIK PERFORMA';
         case 'regulations': return 'KETENTUAN SISTEM';
+        case 'profile': return 'PROFIL ANGGOTA';
+        case 'settings': return 'PENGATURAN SISTEM';
         default: return 'KONTRAK AGENDA';
      }
   }
@@ -626,16 +639,6 @@ const App: React.FC = () => {
               onSubmit={handleCreateContract} 
               onClose={() => setShowContractModal(false)}
             />
-          )}
-
-          {/* User Profile Modal with Upload Logic */}
-          {showProfileModal && (
-             <UserProfileModal 
-                user={userAccount} 
-                onClose={() => setShowProfileModal(false)}
-                onUpdateProfileImage={handleUpdateProfileImage}
-                onUpdateWallpaper={handleUpdateWallpaper}
-             />
           )}
 
           <Sidebar 
@@ -687,7 +690,7 @@ const App: React.FC = () => {
                 <div className="relative group w-full md:w-auto">
                   <input 
                     type="text" 
-                    placeholder="Search..." 
+                    placeholder="Cari..." 
                     className="bg-black/40 border border-white/20 rounded-full px-5 py-3 pl-11 text-sm text-white placeholder-white/70 w-full md:w-64 focus:outline-none focus:border-white/50 focus:bg-black/60 transition-all shadow-lg backdrop-blur-md font-medium"
                   />
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 w-4 h-4 group-focus-within:text-white transition-colors" />
@@ -705,13 +708,13 @@ const App: React.FC = () => {
                    {/* Clickable Profile Section */}
                    <div 
                       className="flex items-center gap-4 pl-1 cursor-pointer group"
-                      onClick={() => setShowProfileModal(true)}
+                      onClick={() => setActiveTab('profile')}
                    >
                      <div className="text-right hidden sm:block">
                        <p className="text-xs font-bold text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors shadow-black drop-shadow-md">
                            {userAccount.name || 'ASDSA'}
                        </p>
-                       <p className="text-[10px] text-white/80 font-medium">System Coordinator</p>
+                       <p className="text-[10px] text-white/80 font-medium">Koordinator Sistem</p>
                      </div>
                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-lg backdrop-blur-md group-hover:border-yellow-400/50 transition-colors overflow-hidden">
                        {userAccount.profileImage ? (
@@ -762,6 +765,19 @@ const App: React.FC = () => {
                  <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
                     <RegulationsView />
                  </div>
+              )}
+
+              {activeTab === 'profile' && (
+                 <ProfileView 
+                    user={userAccount} 
+                    onClose={() => setActiveTab('dashboard')}
+                    onUpdateProfileImage={handleUpdateProfileImage}
+                    onUpdateWallpaper={handleUpdateWallpaper}
+                 />
+              )}
+
+              {activeTab === 'settings' && (
+                 <SettingsView onLogout={handleLogout} />
               )}
 
             </div>

@@ -3,7 +3,6 @@ import {
   Home, 
   BarChart2, 
   Aperture, 
-  Wallet, 
   User, 
   Settings, 
   LogOut, 
@@ -76,14 +75,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isOpen
             active={activeTab === 'regulations'} 
             onClick={() => handleTabClick('regulations')}
           />
-          <SidebarIcon icon={Wallet} />
-          <SidebarIcon icon={User} />
-          <SidebarIcon icon={Settings} />
+          <SidebarIcon 
+            icon={User} 
+            active={activeTab === 'profile'} 
+            onClick={() => handleTabClick('profile')}
+          />
+          <SidebarIcon 
+            icon={Settings} 
+            active={activeTab === 'settings'} 
+            onClick={() => handleTabClick('settings')}
+          />
         </nav>
 
         {/* Bottom Items */}
         <div className="mt-auto flex flex-col gap-6 w-full items-center pb-4 pt-4">
           <SidebarIcon icon={HelpCircle} />
+          {/* Logout icon logic handled via Settings or App state usually, keeping consistent */}
           <SidebarIcon icon={LogOut} />
         </div>
       </aside>
