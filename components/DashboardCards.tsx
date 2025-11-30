@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
-import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck } from 'lucide-react';
+import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck, Clock, CreditCard, Gift, Hash } from 'lucide-react';
 import { UserAccount, ContractStep } from '../types';
 
 // --- Reusable Glass Card Container ---
 const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`bg-black/60 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-hidden group hover:bg-black/70 transition-all duration-500 ${className}`}>
+  <div className={`bg-black/60 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-hidden group hover:bg-black/70 transition-all duration-500 ${className}`}>
     {children}
   </div>
 );
@@ -99,7 +99,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({ title, className = '', onViewDe
   );
 };
 
-// --- 1. Account Card ---
+// --- 1. Account Card (Redesigned for Mobile) ---
 interface AccountCardProps {
   data: UserAccount;
   onOpenForm: () => void;
@@ -110,42 +110,96 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
   const isFormEmpty = data.agendaNumber === '-';
 
   return (
-    <Card className="flex flex-col h-full">
-      <CardHeader 
-        title="Account" 
-        onViewDetail={() => setShowDetail(true)}
-      />
+    <Card className="flex flex-col h-full !p-0">
+      {/* Custom Header within padding */}
+      <div className="p-6 pb-0">
+         <CardHeader 
+           title="Account" 
+           onViewDetail={() => setShowDetail(true)}
+         />
+      </div>
       
-      <div className="flex flex-col sm:flex-row gap-4 relative z-10 flex-1">
-        {/* Info Box */}
-        <div className="flex-1 bg-white/10 rounded-xl p-5 border border-white/20 relative overflow-hidden flex flex-col justify-center group-hover:bg-white/15 transition-colors duration-500">
-           
-          <div className="grid grid-cols-[80px_auto] gap-y-4 text-sm relative z-10">
-            <span className="font-bold text-white/80 uppercase text-[11px] tracking-widest self-center shadow-black drop-shadow-sm">NAME</span>
-            <div className="flex items-center">
-              <span className="text-white font-bold text-lg tracking-wide drop-shadow-md">: {data.name}</span>
-            </div>
-
-            <span className="font-bold text-white/80 uppercase text-[11px] tracking-widest self-center shadow-black drop-shadow-sm">AGENDA</span>
-            <div className="flex items-center">
-              <span className="text-white font-bold text-lg tracking-wide drop-shadow-md">: {data.agendaNumber || '-'}</span>
-            </div>
-            
-            <span className="font-bold text-white/80 uppercase text-[11px] tracking-widest self-center shadow-black drop-shadow-sm">Harga</span>
-            <div className="flex items-center">
-              <span className="text-yellow-200 font-mono text-lg tracking-tight font-bold drop-shadow-md">: {data.price}</span>
-            </div>
-            
-            <span className="font-bold text-white/80 uppercase text-[11px] tracking-widest self-center shadow-black drop-shadow-sm">BENEFIT</span>
-            <div className="flex items-center">
-               <span className="text-emerald-300 font-bold text-lg drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">: {data.benefit}</span>
-            </div>
-          </div>
+      <div className="flex flex-col gap-0 relative z-10 flex-1 p-6 pt-0">
+        
+        {/* Main Info Container */}
+        <div className="flex flex-col gap-4">
           
+          {/* Top Row: Name & Agenda */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Name Block */}
+              <div className="bg-white/5 rounded-2xl p-4 border border-white/10 relative overflow-hidden group/item">
+                  <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/item:opacity-20 transition-opacity">
+                     <Users size={32} className="text-white" />
+                  </div>
+                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">Member Name</p>
+                  <p className="text-xl md:text-2xl font-serif text-white font-bold tracking-wide truncate">
+                    {data.name || '...'}
+                  </p>
+              </div>
+
+              {/* Agenda Block */}
+              <div className="bg-white/5 rounded-2xl p-4 border border-white/10 relative overflow-hidden group/item">
+                  <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/item:opacity-20 transition-opacity">
+                     <Hash size={32} className="text-white" />
+                  </div>
+                  <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold mb-2">Agenda ID</p>
+                  <p className="text-lg md:text-xl font-mono text-white font-medium tracking-wider">
+                    {data.agendaNumber || '-'}
+                  </p>
+              </div>
+          </div>
+
+          {/* Middle Row: Price & Benefit */}
+          <div className="grid grid-cols-[1.5fr_1fr] gap-4">
+             {/* Price */}
+             <div className="bg-gradient-to-br from-yellow-900/20 to-black rounded-2xl p-4 border border-yellow-500/30 relative group/price">
+                <div className="flex items-center gap-2 mb-2">
+                   <CreditCard size={14} className="text-yellow-500" />
+                   <p className="text-[10px] text-yellow-500 uppercase tracking-[0.2em] font-bold">Package Price</p>
+                </div>
+                <p className="text-lg md:text-xl font-mono font-bold text-white truncate group-hover/price:text-yellow-400 transition-colors">
+                   {data.price}
+                </p>
+             </div>
+
+             {/* Benefit */}
+             <div className="bg-gradient-to-br from-emerald-900/20 to-black rounded-2xl p-4 border border-emerald-500/30 relative group/benefit">
+                <div className="flex items-center gap-2 mb-2">
+                   <Gift size={14} className="text-emerald-500" />
+                   <p className="text-[10px] text-emerald-500 uppercase tracking-[0.2em] font-bold">Benefit</p>
+                </div>
+                <p className="text-lg md:text-xl font-bold text-white group-hover/benefit:text-emerald-400 transition-colors">
+                   {data.benefit}
+                </p>
+             </div>
+          </div>
+
+          {/* Timer Section (Full Width Bar) */}
+          <div className="bg-[#0f0f0f] rounded-2xl p-4 border border-white/10 flex items-center justify-between relative overflow-hidden">
+             {/* Animated Progress Bar Background */}
+             <div className="absolute inset-0 bg-white/5 w-[60%] skew-x-12 opacity-50"></div>
+             
+             <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
+                   <Clock size={20} className="text-yellow-500 animate-pulse" />
+                </div>
+                <div>
+                   <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Sisa Waktu</p>
+                   <p className="text-xs text-white/80">Masa berlaku agenda</p>
+                </div>
+             </div>
+
+             <div className="text-right relative z-10">
+                <p className="text-3xl font-serif font-bold text-white leading-none">{data.expiryMinutes}</p>
+                <p className="text-[9px] text-yellow-500 uppercase font-bold tracking-widest mt-1">Menit</p>
+             </div>
+          </div>
+
+          {/* Action Button */}
           {isFormEmpty && (
              <button 
                onClick={onOpenForm}
-               className="mt-6 w-full bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C5A028] text-black font-extrabold py-2.5 rounded-lg hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider text-xs flex items-center justify-center gap-2"
+               className="mt-2 w-full bg-white text-black font-extrabold py-4 rounded-xl hover:bg-gray-200 transition-all transform active:scale-[0.98] uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
              >
                <Plus size={16} strokeWidth={3} />
                Isi Formulir Agenda
@@ -153,26 +207,12 @@ export const AccountCard: React.FC<AccountCardProps> = ({ data, onOpenForm }) =>
           )}
 
         </div>
-
-        {/* Timer Box */}
-        <div className="bg-gradient-to-br from-yellow-900/60 via-black/90 to-black rounded-xl p-4 w-full sm:w-40 border border-yellow-500/40 flex flex-col items-center justify-center relative overflow-hidden shrink-0 shadow-xl">
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-yellow-500/20 to-transparent"></div>
-             
-             <div className="text-[10px] text-yellow-400 font-extrabold uppercase mb-2 text-center tracking-[0.15em] leading-relaxed z-10 drop-shadow-md">
-               MASA BERLAKU<br/>AGENDA BERAKHIR
-             </div>
-             <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent mb-3"></div>
-             <div className="text-5xl font-serif font-bold text-white relative z-10 tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                {data.expiryMinutes}
-             </div>
-             <div className="text-[10px] text-yellow-400 font-bold uppercase mt-1 tracking-[0.2em] z-10 shadow-black">MENIT</div>
-        </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-white/20 text-center relative">
-        <p className="text-emerald-300 text-sm font-medium tracking-widest uppercase inline-flex items-center gap-2 drop-shadow-md">
-           <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10B981] animate-pulse"></span>
-           Pastikan sudah di baca sebelum kontrak di setujui
+      <div className="mt-auto px-6 py-4 bg-white/5 border-t border-white/5 text-center">
+        <p className="text-emerald-300 text-[10px] font-bold tracking-[0.15em] uppercase inline-flex items-center gap-2">
+           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981] animate-pulse"></span>
+           Status: Active
         </p>
       </div>
 
@@ -515,7 +555,7 @@ export const StatisticsCard: React.FC = () => {
                </div>
                <span className="text-yellow-500/80 text-xs uppercase tracking-widest font-bold">Total Pendapatan Member</span>
                <div className="flex flex-col">
-                  <h4 className="text-2xl lg:text-3xl font-serif font-bold text-white tracking-tight drop-shadow-lg break-words">
+                  <h4 className="text-xl lg:text-2xl xl:text-3xl font-serif font-bold text-white tracking-tight drop-shadow-lg break-words leading-tight">
                     {currentData.income.total}
                   </h4>
                   <div className="flex items-center gap-2 mt-2">
