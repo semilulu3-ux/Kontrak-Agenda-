@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck, Clock, CreditCard, Gift, Hash, LogOut, ChevronRight, Info, Languages, Smartphone, Settings, CheckCircle2 } from 'lucide-react';
+import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck, Clock, CreditCard, Gift, Hash, LogOut, ChevronRight, Info, Languages, Smartphone, Settings, CheckCircle2, Search } from 'lucide-react';
 import { UserAccount, ContractStep } from '../types';
 
 // --- Reusable Glass Card Container ---
@@ -400,6 +400,7 @@ export const AttentionCard: React.FC = () => {
           <div className="absolute top-0 right-0 w-80 h-80 bg-red-900/20 rounded-full blur-[100px] pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-900/20 rounded-full blur-[100px] pointer-events-none"></div>
           
+          <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 opacity-[0.02]"></div>
           <div className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 opacity-100 shadow-[0_0_15px_rgba(255,255,255,0.3)]"></div>
 
           {/* Replaced manual header with CardHeader to use the same Dropdown Logic */}
@@ -993,6 +994,34 @@ interface SettingsViewProps {
 export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
    const [activeModal, setActiveModal] = useState<'none' | 'language' | 'about'>('none');
    const [selectedLanguage, setSelectedLanguage] = useState('Bahasa Indonesia');
+   const [searchQuery, setSearchQuery] = useState('');
+
+   const languages = [
+      "Bahasa Indonesia",
+      "English (US)",
+      "English (UK)",
+      "中文 (Chinese Simplified)",
+      "中文 (Chinese Traditional)",
+      "日本語 (Japanese)",
+      "한국어 (Korean)",
+      "Español (Spanish)",
+      "Français (French)",
+      "Deutsch (German)",
+      "Italiano (Italian)",
+      "Português (Portuguese)",
+      "Русский (Russian)",
+      "العربية (Arabic)",
+      "हिन्दी (Hindi)",
+      "Nederlands (Dutch)",
+      "Türkçe (Turkish)",
+      "Tiếng Việt (Vietnamese)",
+      "ไทย (Thai)",
+      "Melayu (Malay)"
+   ];
+
+   const filteredLanguages = languages.filter(lang => 
+      lang.toLowerCase().includes(searchQuery.toLowerCase())
+   );
 
    const handleLanguageSelect = (lang: string) => {
      setSelectedLanguage(lang);
@@ -1084,21 +1113,37 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onLogout }) => {
          {/* Language Modal */}
          {activeModal === 'language' && (
             <DetailModal title="Pilih Bahasa" onClose={() => setActiveModal('none')}>
-               <div className="space-y-2">
-                  {['Bahasa Indonesia', 'English (US)', '中文 (Chinese)'].map((lang) => (
-                     <button 
-                        key={lang}
-                        onClick={() => handleLanguageSelect(lang)}
-                        className={`w-full text-left p-4 rounded-xl border flex items-center justify-between transition-all ${
-                           selectedLanguage === lang 
-                           ? 'bg-yellow-500/10 border-yellow-500 text-yellow-500' 
-                           : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
-                        }`}
-                     >
-                        <span className="font-bold">{lang}</span>
-                        {selectedLanguage === lang && <CheckCircle2 size={20} />}
-                     </button>
-                  ))}
+               <div className="mb-4 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+                  <input 
+                     type="text" 
+                     placeholder="Cari bahasa..." 
+                     value={searchQuery}
+                     onChange={(e) => setSearchQuery(e.target.value)}
+                     className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-yellow-500/50 transition-colors"
+                  />
+               </div>
+               <div className="space-y-2 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2">
+                  {filteredLanguages.length > 0 ? (
+                     filteredLanguages.map((lang) => (
+                        <button 
+                           key={lang}
+                           onClick={() => handleLanguageSelect(lang)}
+                           className={`w-full text-left p-4 rounded-xl border flex items-center justify-between transition-all ${
+                              selectedLanguage === lang 
+                              ? 'bg-yellow-500/10 border-yellow-500 text-yellow-500' 
+                              : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                           }`}
+                        >
+                           <span className="font-bold">{lang}</span>
+                           {selectedLanguage === lang && <CheckCircle2 size={20} />}
+                        </button>
+                     ))
+                  ) : (
+                     <div className="text-center py-8 text-white/30 text-sm">
+                        Bahasa tidak ditemukan
+                     </div>
+                  )}
                </div>
             </DetailModal>
          )}

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { 
@@ -7,10 +8,19 @@ import {
   AttentionCard,
   StatisticsCard,
   RegulationsView,
-  SettingsView
+  SettingsView,
+  HelpView
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
-import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, Shield, CheckCircle2, ScanBarcode, Camera, Image as ImageIcon, Upload } from 'lucide-react';
+import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, CheckCircle2, ScanBarcode, Camera, Image as ImageIcon, Upload } from 'lucide-react';
+
+// --- LocalStorage Keys ---
+const STORAGE_KEYS = {
+  AUTH: 'gucci_auth_status',
+  USER: 'gucci_user_data',
+  BG: 'gucci_bg_pref',
+  STEPS: 'gucci_contract_steps'
+};
 
 // --- Login Screen Component ---
 interface LoginProps {
@@ -73,7 +83,7 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
            <div className="space-y-1">
               <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Nama Lengkap</label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
+                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
                 <input 
                   type="text" 
                   required
@@ -475,16 +485,21 @@ const ProfileView: React.FC<UserProfileModalProps> = ({ user, onClose, onUpdateP
 
 // --- Main App Component ---
 const App: React.FC = () => {
-  // --- Auth State ---
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard'); // New State for Sidebar Tabs
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
+  // --- Auth State with Persistence ---
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.AUTH) === 'active';
+  });
+  
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Controls if the modal form should be visible
   const [showContractModal, setShowContractModal] = useState(false);
   
-  // Customization States
-  const [bgImage, setBgImage] = useState("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop");
+  // Customization States with Persistence
+  const [bgImage, setBgImage] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.BG) || "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop";
+  });
 
   const [loginForm, setLoginForm] = useState({ 
     name: '', 
@@ -494,67 +509,103 @@ const App: React.FC = () => {
     city: '' 
   });
 
-  // --- Data State ---
-  const [userAccount, setUserAccount] = useState<UserAccount>({
-    name: "",
-    price: "-", // Default value before contract creation
-    benefit: "-", // Default value
-    expiryMinutes: 60,
-    phoneNumber: "",
-    agendaNumber: "-", // Default value
-    dob: "",
-    city: "",
-    profileImage: undefined // Init
+  // --- Data State with Persistence ---
+  const [userAccount, setUserAccount] = useState<UserAccount>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.USER);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    return {
+      name: "",
+      price: "-",
+      benefit: "-",
+      expiryMinutes: 60,
+      phoneNumber: "",
+      agendaNumber: "-",
+      dob: "",
+      city: "",
+      profileImage: undefined
+    };
   });
 
-  const [contractSteps, setContractSteps] = useState<ContractStep[]>([
-    {
-      key: '1',
-      label: 'Ketentuan',
-      description: 'Pesanan di terbitkan oleh sistem',
-      status: 'Done'
-    },
-    {
-      key: '2',
-      label: 'Proses',
-      description: 'Sistem akan memproses tugas secara otomatis',
-      status: 'Done'
-    },
-    {
-      key: '3',
-      label: 'Agenda',
-      description: 'Satu paket satu penarikan',
-      status: 'Done'
-    },
-    {
-      key: '4',
-      label: 'Penyelesaian',
-      description: 'Jika agenda belum selesai, sistem tidak akan mengizinkan penarikan.',
-      status: 'Done'
-    },
-    {
-      key: '5',
-      label: 'Konfirmasi',
-      description: 'Kepada kordinator jika terdapat kendala dalam penyelesaian agenda.',
-      status: 'Done'
+  const [contractSteps, setContractSteps] = useState<ContractStep[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.STEPS);
+    if (saved) {
+      return JSON.parse(saved);
     }
-  ]);
+    return [
+      {
+        key: '1',
+        label: 'Ketentuan',
+        description: 'Pesanan di terbitkan oleh sistem',
+        status: 'Done'
+      },
+      {
+        key: '2',
+        label: 'Proses',
+        description: 'Sistem akan memproses tugas secara otomatis',
+        status: 'Done'
+      },
+      {
+        key: '3',
+        label: 'Agenda',
+        description: 'Satu paket satu penarikan',
+        status: 'Done'
+      },
+      {
+        key: '4',
+        label: 'Penyelesaian',
+        description: 'Jika agenda belum selesai, sistem tidak akan mengizinkan penarikan.',
+        status: 'Done'
+      },
+      {
+        key: '5',
+        label: 'Konfirmasi',
+        description: 'Kepada kordinator jika terdapat kendala dalam penyelesaian agenda.',
+        status: 'Done'
+      }
+    ];
+  });
+
+  // --- Effects for Persistence ---
+  useEffect(() => {
+    if (isLoggedIn) {
+      localStorage.setItem(STORAGE_KEYS.AUTH, 'active');
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.AUTH);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userAccount));
+  }, [userAccount]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.BG, bgImage);
+  }, [bgImage]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.STEPS, JSON.stringify(contractSteps));
+  }, [contractSteps]);
+
 
   const handleLogin = () => {
     // Update user account with ALL logged in data
-    setUserAccount(prev => ({
-      ...prev,
+    const newData = {
+      ...userAccount,
       name: loginForm.name,
       phoneNumber: loginForm.phone,
       dob: loginForm.dob,
       city: loginForm.city
-    }));
+    };
+    
+    setUserAccount(newData);
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setActiveTab('dashboard'); // Reset tab
+    setActiveTab('dashboard');
     setLoginForm({ 
       name: '', 
       dob: '', 
@@ -562,6 +613,33 @@ const App: React.FC = () => {
       password: '', 
       city: '' 
     });
+    
+    // Clear persistence
+    localStorage.removeItem(STORAGE_KEYS.AUTH);
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    localStorage.removeItem(STORAGE_KEYS.STEPS);
+    localStorage.removeItem(STORAGE_KEYS.BG);
+    
+    // Reset states to default
+    setBgImage("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop");
+    setUserAccount({
+      name: "",
+      price: "-",
+      benefit: "-",
+      expiryMinutes: 60,
+      phoneNumber: "",
+      agendaNumber: "-",
+      dob: "",
+      city: "",
+      profileImage: undefined
+    });
+    setContractSteps([
+      { key: '1', label: 'Ketentuan', description: 'Pesanan di terbitkan oleh sistem', status: 'Done' },
+      { key: '2', label: 'Proses', description: 'Sistem akan memproses tugas secara otomatis', status: 'Done' },
+      { key: '3', label: 'Agenda', description: 'Satu paket satu penarikan', status: 'Done' },
+      { key: '4', label: 'Penyelesaian', description: 'Jika agenda belum selesai, sistem tidak akan mengizinkan penarikan.', status: 'Done' },
+      { key: '5', label: 'Konfirmasi', description: 'Kepada kordinator jika terdapat kendala dalam penyelesaian agenda.', status: 'Done' }
+    ]);
   };
 
   const handleCreateContract = (data: { agenda: string; price: string; benefit: string }) => {
@@ -608,6 +686,7 @@ const App: React.FC = () => {
         case 'regulations': return 'KETENTUAN SISTEM';
         case 'profile': return 'PROFIL ANGGOTA';
         case 'settings': return 'PENGATURAN SISTEM';
+        case 'help': return 'PUSAT BANTUAN';
         default: return 'KONTRAK AGENDA';
      }
   }
@@ -764,6 +843,12 @@ const App: React.FC = () => {
               {activeTab === 'regulations' && (
                  <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
                     <RegulationsView />
+                 </div>
+              )}
+
+              {activeTab === 'help' && (
+                 <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
+                    <HelpView />
                  </div>
               )}
 
