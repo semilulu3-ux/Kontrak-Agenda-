@@ -7,22 +7,22 @@ import {
   ContractStatusCard, 
   AttentionCard,
   StatisticsCard,
-  RegulationsView // Import komponen baru
+  RegulationsView 
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
-import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X } from 'lucide-react';
+import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, Shield } from 'lucide-react';
 
 // --- Login Screen Component ---
 interface LoginProps {
   onLogin: () => void;
-  data: { name: string; phone: string; password: string };
-  setData: React.Dispatch<React.SetStateAction<{ name: string; phone: string; password: string }>>;
+  data: { name: string; dob: string; phone: string; password: string; city: string };
+  setData: React.Dispatch<React.SetStateAction<{ name: string; dob: string; phone: string; password: string; city: string }>>;
 }
 
 const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (data.name && data.password && data.phone) {
+    if (data.name && data.dob && data.phone && data.password && data.city) {
       onLogin();
     }
   };
@@ -50,7 +50,8 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
           <p className="text-white/60 text-xs uppercase tracking-[0.2em] font-medium">Kontrak Sistem</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+           {/* 1. Nama Lengkap */}
            <div className="space-y-1">
               <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Nama Lengkap</label>
               <div className="relative group">
@@ -66,8 +67,24 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
               </div>
            </div>
 
+           {/* 2. Tanggal Lahir */}
            <div className="space-y-1">
-              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Nomor Hp</label>
+              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Tanggal lahir dan tahun</label>
+              <div className="relative group">
+                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
+                <input 
+                  type="date" 
+                  required
+                  value={data.dob}
+                  onChange={e => setData({...data, dob: e.target.value})}
+                  className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3.5 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-yellow-500 focus:bg-black/60 transition-all font-medium [color-scheme:dark]"
+                />
+              </div>
+           </div>
+
+           {/* 3. Nomor Handphone */}
+           <div className="space-y-1">
+              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Nomor Handpone</label>
               <div className="relative group">
                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
                 <input 
@@ -81,8 +98,9 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
               </div>
            </div>
 
+           {/* 4. Kata Sandi */}
            <div className="space-y-1">
-              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Kata Sandi</label>
+              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Kata sandi</label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
                 <input 
@@ -92,6 +110,22 @@ const LoginScreen: React.FC<LoginProps> = ({ onLogin, data, setData }) => {
                   onChange={e => setData({...data, password: e.target.value})}
                   className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3.5 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-yellow-500 focus:bg-black/60 transition-all font-medium"
                   placeholder="••••••••"
+                />
+              </div>
+           </div>
+
+           {/* 5. Kota Tinggal */}
+           <div className="space-y-1">
+              <label className="text-xs font-bold text-yellow-500/90 uppercase tracking-widest ml-1">Kota tinggal</label>
+              <div className="relative group">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5 group-focus-within:text-yellow-400 transition-colors" />
+                <input 
+                  type="text" 
+                  required
+                  value={data.city}
+                  onChange={e => setData({...data, city: e.target.value})}
+                  className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3.5 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-yellow-500 focus:bg-black/60 transition-all font-medium"
+                  placeholder="Contoh: Jakarta Selatan"
                 />
               </div>
            </div>
@@ -225,6 +259,81 @@ const ContractFormModal: React.FC<ContractFormProps> = ({ onSubmit, onClose }) =
   );
 };
 
+// --- User Profile Modal ---
+interface UserProfileModalProps {
+  user: UserAccount;
+  onClose: () => void;
+}
+
+const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose }) => {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="w-full max-w-sm bg-[#111] rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden animate-in zoom-in-95 duration-300">
+         
+         {/* Top Banner */}
+         <div className="h-24 bg-gradient-to-r from-yellow-700/20 via-yellow-900/40 to-black relative">
+            <button onClick={onClose} className="absolute top-4 right-4 bg-black/40 text-white/70 hover:text-white p-1 rounded-full transition-colors backdrop-blur-sm z-20">
+              <X size={20} />
+            </button>
+         </div>
+
+         {/* Profile Image & Info */}
+         <div className="px-6 pb-8 relative -mt-12">
+            <div className="flex flex-col items-center mb-6">
+              <div className="w-24 h-24 rounded-full bg-[#111] p-1.5 shadow-2xl relative z-10">
+                 <div className="w-full h-full rounded-full bg-gradient-to-b from-white/10 to-transparent border border-white/20 flex items-center justify-center overflow-hidden">
+                    <UserIcon size={40} className="text-white/50" />
+                 </div>
+                 <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-[#111] flex items-center justify-center shadow-lg">
+                    <Shield size={12} className="text-black fill-current" />
+                 </div>
+              </div>
+              <h3 className="text-xl font-bold text-white mt-3 text-center">{user.name}</h3>
+              <p className="text-xs text-yellow-500 uppercase tracking-widest font-bold">Peserta Terdaftar</p>
+            </div>
+
+            <div className="space-y-4">
+               {/* Detail Items */}
+               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                     <Calendar size={18} className="text-white/60" />
+                  </div>
+                  <div>
+                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Tanggal Lahir</p>
+                     <p className="text-sm text-white font-medium">{user.dob || '-'}</p>
+                  </div>
+               </div>
+
+               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                     <Phone size={18} className="text-white/60" />
+                  </div>
+                  <div>
+                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Nomor Telepon</p>
+                     <p className="text-sm text-white font-medium">{user.phoneNumber || '-'}</p>
+                  </div>
+               </div>
+
+               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                     <MapPin size={18} className="text-white/60" />
+                  </div>
+                  <div>
+                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Kota Tinggal</p>
+                     <p className="text-sm text-white font-medium">{user.city || '-'}</p>
+                  </div>
+               </div>
+            </div>
+            
+            <div className="mt-8 text-center border-t border-white/10 pt-4">
+               <p className="text-[10px] text-white/30 uppercase tracking-widest">Gucci Member Identity</p>
+            </div>
+         </div>
+      </div>
+    </div>
+  );
+};
+
 
 // --- Main App Component ---
 const App: React.FC = () => {
@@ -235,8 +344,15 @@ const App: React.FC = () => {
   
   // Controls if the modal form should be visible
   const [showContractModal, setShowContractModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false); // Controls Profile Modal
   
-  const [loginForm, setLoginForm] = useState({ name: '', phone: '', password: '' });
+  const [loginForm, setLoginForm] = useState({ 
+    name: '', 
+    dob: '', 
+    phone: '', 
+    password: '', 
+    city: '' 
+  });
 
   // --- Data State ---
   const [userAccount, setUserAccount] = useState<UserAccount>({
@@ -245,7 +361,9 @@ const App: React.FC = () => {
     benefit: "-", // Default value
     expiryMinutes: 60,
     phoneNumber: "",
-    agendaNumber: "-" // Default value
+    agendaNumber: "-", // Default value
+    dob: "",
+    city: ""
   });
 
   const [contractSteps, setContractSteps] = useState<ContractStep[]>([
@@ -282,11 +400,13 @@ const App: React.FC = () => {
   ]);
 
   const handleLogin = () => {
-    // Update user account with logged in name and phone
+    // Update user account with ALL logged in data
     setUserAccount(prev => ({
       ...prev,
       name: loginForm.name,
-      phoneNumber: loginForm.phone
+      phoneNumber: loginForm.phone,
+      dob: loginForm.dob,
+      city: loginForm.city
     }));
     setIsLoggedIn(true);
   };
@@ -358,6 +478,11 @@ const App: React.FC = () => {
             />
           )}
 
+          {/* User Profile Modal */}
+          {showProfileModal && (
+             <UserProfileModal user={userAccount} onClose={() => setShowProfileModal(false)} />
+          )}
+
           <Sidebar 
             activeTab={activeTab} 
             onTabChange={setActiveTab} 
@@ -422,10 +547,14 @@ const App: React.FC = () => {
                    
                    <div className="h-8 w-[1px] bg-white/20 mx-1 hidden sm:block"></div>
 
-                   <div className="flex items-center gap-4 pl-1 cursor-pointer group">
+                   {/* Clickable Profile Section */}
+                   <div 
+                      className="flex items-center gap-4 pl-1 cursor-pointer group"
+                      onClick={() => setShowProfileModal(true)}
+                   >
                      <div className="text-right hidden sm:block">
                        <p className="text-xs font-bold text-white uppercase tracking-widest group-hover:text-yellow-400 transition-colors shadow-black drop-shadow-md">
-                           {userAccount.name}
+                           {userAccount.name || 'ASDSA'}
                        </p>
                        <p className="text-[10px] text-white/80 font-medium">System Coordinator</p>
                      </div>

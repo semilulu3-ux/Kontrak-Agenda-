@@ -7,6 +7,8 @@ export interface UserAccount {
   expiryMinutes: number;
   phoneNumber?: string;
   agendaNumber?: string;
+  dob?: string;
+  city?: string;
 }
 
 export interface ContractStep {
