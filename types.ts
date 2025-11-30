@@ -9,6 +9,7 @@ export interface UserAccount {
   agendaNumber?: string;
   dob?: string;
   city?: string;
+  profileImage?: string; // New field for profile picture
 }
 
 export interface ContractStep {

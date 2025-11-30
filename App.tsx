@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { 
   AccountCard, 
@@ -10,7 +10,7 @@ import {
   RegulationsView 
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
-import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, Shield } from 'lucide-react';
+import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X, Calendar, MapPin, Shield, CheckCircle2, ScanBarcode, Camera, Image as ImageIcon, Upload } from 'lucide-react';
 
 // --- Login Screen Component ---
 interface LoginProps {
@@ -259,76 +259,194 @@ const ContractFormModal: React.FC<ContractFormProps> = ({ onSubmit, onClose }) =
   );
 };
 
-// --- User Profile Modal ---
+// --- User Profile Modal (Revised: Premium Member Card with Uploads) ---
 interface UserProfileModalProps {
   user: UserAccount;
   onClose: () => void;
+  onUpdateProfileImage: (url: string) => void;
+  onUpdateWallpaper: (url: string) => void;
 }
 
-const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose }) => {
+const UserProfileModal: React.FC<UserProfileModalProps> = ({ user, onClose, onUpdateProfileImage, onUpdateWallpaper }) => {
+  const profileInputRef = useRef<HTMLInputElement>(null);
+  const wallpaperInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (url: string) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setter(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="w-full max-w-sm bg-[#111] rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden animate-in zoom-in-95 duration-300">
+      
+      {/* Hidden File Inputs */}
+      <input 
+        type="file" 
+        ref={profileInputRef} 
+        onChange={(e) => handleFileChange(e, onUpdateProfileImage)} 
+        accept="image/*" 
+        className="hidden" 
+      />
+      <input 
+        type="file" 
+        ref={wallpaperInputRef} 
+        onChange={(e) => handleFileChange(e, onUpdateWallpaper)} 
+        accept="image/*" 
+        className="hidden" 
+      />
+
+      {/* Card Container */}
+      <div className="w-full max-w-[420px] bg-[#0a0a0a] rounded-3xl overflow-hidden relative shadow-[0_20px_60px_rgba(0,0,0,0.9)] border border-yellow-500/30 animate-in zoom-in-95 duration-500 group">
          
-         {/* Top Banner */}
-         <div className="h-24 bg-gradient-to-r from-yellow-700/20 via-yellow-900/40 to-black relative">
-            <button onClick={onClose} className="absolute top-4 right-4 bg-black/40 text-white/70 hover:text-white p-1 rounded-full transition-colors backdrop-blur-sm z-20">
-              <X size={20} />
-            </button>
+         {/* Background Effects */}
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(60,60,60,1),rgba(10,10,10,1))] opacity-100"></div>
+         {/* Subtle Noise Texture */}
+         <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.png")'}}></div>
+         
+         {/* Top Header - The "Physical Card" look */}
+         <div className="relative z-10 p-6 pb-2">
+            <div className="flex justify-between items-start">
+               {/* Gucci Stripes - Vertical on Left */}
+               <div className="absolute left-6 top-0 h-24 w-8 flex">
+                  <div className="w-1/3 h-full bg-[#1a472a] shadow-inner"></div> {/* Green */}
+                  <div className="w-1/3 h-full bg-[#8a1c1c] shadow-inner"></div> {/* Red */}
+                  <div className="w-1/3 h-full bg-[#1a472a] shadow-inner"></div> {/* Green */}
+                  <div className="absolute bottom-0 w-full h-8 bg-gradient-to-t from-[#0a0a0a] to-transparent"></div>
+               </div>
+
+               <div className="ml-auto flex flex-col items-end">
+                  <h2 className="text-3xl font-serif font-bold text-white tracking-widest drop-shadow-md">GUCCI</h2>
+                  <p className="text-[8px] text-yellow-500 uppercase tracking-[0.4em] font-bold border-b border-yellow-500/50 pb-1 mt-1">Member Identity</p>
+               </div>
+            </div>
          </div>
 
-         {/* Profile Image & Info */}
-         <div className="px-6 pb-8 relative -mt-12">
-            <div className="flex flex-col items-center mb-6">
-              <div className="w-24 h-24 rounded-full bg-[#111] p-1.5 shadow-2xl relative z-10">
-                 <div className="w-full h-full rounded-full bg-gradient-to-b from-white/10 to-transparent border border-white/20 flex items-center justify-center overflow-hidden">
-                    <UserIcon size={40} className="text-white/50" />
-                 </div>
-                 <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-[#111] flex items-center justify-center shadow-lg">
-                    <Shield size={12} className="text-black fill-current" />
-                 </div>
-              </div>
-              <h3 className="text-xl font-bold text-white mt-3 text-center">{user.name}</h3>
-              <p className="text-xs text-yellow-500 uppercase tracking-widest font-bold">Peserta Terdaftar</p>
-            </div>
+         {/* Close Button */}
+         <button onClick={onClose} className="absolute top-4 left-4 text-white/30 hover:text-white transition-colors z-50">
+            <X size={20} />
+         </button>
 
-            <div className="space-y-4">
-               {/* Detail Items */}
-               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                     <Calendar size={18} className="text-white/60" />
-                  </div>
-                  <div>
-                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Tanggal Lahir</p>
-                     <p className="text-sm text-white font-medium">{user.dob || '-'}</p>
-                  </div>
-               </div>
-
-               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                     <Phone size={18} className="text-white/60" />
-                  </div>
-                  <div>
-                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Nomor Telepon</p>
-                     <p className="text-sm text-white font-medium">{user.phoneNumber || '-'}</p>
-                  </div>
-               </div>
-
-               <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                     <MapPin size={18} className="text-white/60" />
-                  </div>
-                  <div>
-                     <p className="text-[10px] text-white/40 uppercase tracking-wider font-bold">Kota Tinggal</p>
-                     <p className="text-sm text-white font-medium">{user.city || '-'}</p>
-                  </div>
-               </div>
-            </div>
+         {/* Content Area */}
+         <div className="relative z-10 px-6 pt-4 pb-8">
             
-            <div className="mt-8 text-center border-t border-white/10 pt-4">
-               <p className="text-[10px] text-white/30 uppercase tracking-widest">Gucci Member Identity</p>
+            {/* Profile Photo & Main Info */}
+            <div className="flex items-end gap-5 mb-8">
+               <div className="relative shrink-0 group/photo cursor-pointer" onClick={() => profileInputRef.current?.click()}>
+                  <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-yellow-400 via-yellow-600 to-yellow-800 shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+                     <div className="w-full h-full rounded-full bg-black overflow-hidden flex items-center justify-center border-2 border-black relative">
+                        {user.profileImage ? (
+                          <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-3xl font-serif text-yellow-500 font-bold">
+                             {user.name.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                        
+                        {/* Overlay for uploading */}
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300">
+                          <Camera size={24} className="text-white" />
+                        </div>
+                     </div>
+                  </div>
+                  {/* Verified Badge */}
+                  <div className="absolute bottom-0 right-0 bg-black rounded-full p-0.5">
+                     <CheckCircle2 size={22} className="text-blue-400 fill-blue-900/50" />
+                  </div>
+               </div>
+
+               <div className="pb-1">
+                  <h3 className="text-2xl font-serif font-bold text-white leading-tight mb-1 truncate max-w-[200px]">{user.name}</h3>
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-yellow-500/30 bg-yellow-500/5">
+                     <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                     <span className="text-[9px] text-yellow-500 uppercase font-bold tracking-widest">Peserta Terdaftar</span>
+                  </div>
+               </div>
             </div>
+
+            {/* Data Grid - ID Card Style */}
+            <div className="space-y-5 relative">
+               {/* Vertical Line Connector */}
+               <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gradient-to-b from-white/10 via-white/5 to-transparent"></div>
+
+               <div className="flex items-start gap-4 relative">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 z-10">
+                     <ScanBarcode size={18} className="text-white/70" />
+                  </div>
+                  <div className="flex-1 border-b border-white/5 pb-2">
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">ID Number</p>
+                     <p className="text-sm font-mono text-white/90 tracking-wider">GC-{Math.floor(Math.random() * 1000000)}</p>
+                  </div>
+               </div>
+
+               <div className="flex items-start gap-4 relative">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 z-10">
+                     <Calendar size={18} className="text-white/70" />
+                  </div>
+                  <div className="flex-1 border-b border-white/5 pb-2">
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Date of Birth</p>
+                     <p className="text-sm text-white/90 font-medium">{user.dob || '-'}</p>
+                  </div>
+               </div>
+
+               <div className="flex items-start gap-4 relative">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 z-10">
+                     <Phone size={18} className="text-white/70" />
+                  </div>
+                  <div className="flex-1 border-b border-white/5 pb-2">
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Phone Contact</p>
+                     <p className="text-sm text-white/90 font-medium">{user.phoneNumber || '-'}</p>
+                  </div>
+               </div>
+
+               <div className="flex items-start gap-4 relative">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 z-10">
+                     <MapPin size={18} className="text-white/70" />
+                  </div>
+                  <div className="flex-1 border-b border-white/5 pb-2">
+                     <p className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Residence</p>
+                     <p className="text-sm text-white/90 font-medium">{user.city || '-'}</p>
+                  </div>
+               </div>
+            </div>
+
+            {/* Customization Button for Wallpaper */}
+            <div className="mt-6">
+                <button 
+                  onClick={() => wallpaperInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all group/btn"
+                >
+                   <ImageIcon size={16} className="text-white/60 group-hover/btn:text-yellow-400 transition-colors" />
+                   <span className="text-xs font-bold text-white/70 group-hover/btn:text-white uppercase tracking-wider">Pasang Wallpaper Galeri</span>
+                   <Upload size={14} className="text-white/40 ml-1" />
+                </button>
+            </div>
+
+            {/* Bottom Section: Barcode & Footer */}
+            <div className="mt-6 pt-6 border-t border-white/10 flex justify-between items-end">
+               <div>
+                  <div className="h-8 w-32 bg-white/90 p-1 mb-1">
+                     <div className="h-full w-full bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png')] bg-contain bg-no-repeat opacity-80 mix-blend-multiply grayscale"></div>
+                  </div>
+                  <p className="text-[8px] text-white/30 uppercase tracking-widest">Auth Code: 8849-2210</p>
+               </div>
+               
+               <div className="text-right">
+                   {/* Signature Effect */}
+                   <p className="font-serif italic text-white/50 text-xl pr-2" style={{fontFamily: 'cursive'}}>Gucci Official</p>
+                   <p className="text-[8px] text-yellow-500 uppercase tracking-widest font-bold mt-1">Authorized Signature</p>
+               </div>
+            </div>
+
          </div>
+
+         {/* Glossy Overlay */}
+         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 pointer-events-none z-20"></div>
       </div>
     </div>
   );
@@ -346,6 +464,9 @@ const App: React.FC = () => {
   const [showContractModal, setShowContractModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false); // Controls Profile Modal
   
+  // Customization States
+  const [bgImage, setBgImage] = useState("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop");
+
   const [loginForm, setLoginForm] = useState({ 
     name: '', 
     dob: '', 
@@ -363,7 +484,8 @@ const App: React.FC = () => {
     phoneNumber: "",
     agendaNumber: "-", // Default value
     dob: "",
-    city: ""
+    city: "",
+    profileImage: undefined // Init
   });
 
   const [contractSteps, setContractSteps] = useState<ContractStep[]>([
@@ -440,6 +562,14 @@ const App: React.FC = () => {
     setShowContractModal(false);
   };
 
+  const handleUpdateProfileImage = (url: string) => {
+    setUserAccount(prev => ({ ...prev, profileImage: url }));
+  };
+
+  const handleUpdateWallpaper = (url: string) => {
+    setBgImage(url);
+  };
+
   // Helper title for Header
   const getHeaderTitle = () => {
      switch(activeTab) {
@@ -453,12 +583,12 @@ const App: React.FC = () => {
     <div className="flex min-h-screen font-sans overflow-x-hidden relative selection:bg-yellow-500/30 selection:text-yellow-100">
       
       {/* --- Background Layer (Always Visible) --- */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* High-quality sunset/nature background */}
+      <div className="fixed inset-0 z-0 pointer-events-none transition-all duration-1000 ease-in-out">
+        {/* Dynamic Background Image */}
         <img 
-           src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop"
-           className="w-full h-full object-cover"
-           alt="Gucci Background"
+           src={bgImage}
+           className="w-full h-full object-cover transition-opacity duration-1000"
+           alt="Background"
         />
         {/* Overlay Gradients for Depth & Readability */}
         <div className="absolute inset-0 bg-black/40 mix-blend-multiply"></div>
@@ -478,9 +608,14 @@ const App: React.FC = () => {
             />
           )}
 
-          {/* User Profile Modal */}
+          {/* User Profile Modal with Upload Logic */}
           {showProfileModal && (
-             <UserProfileModal user={userAccount} onClose={() => setShowProfileModal(false)} />
+             <UserProfileModal 
+                user={userAccount} 
+                onClose={() => setShowProfileModal(false)}
+                onUpdateProfileImage={handleUpdateProfileImage}
+                onUpdateWallpaper={handleUpdateWallpaper}
+             />
           )}
 
           <Sidebar 
@@ -558,8 +693,12 @@ const App: React.FC = () => {
                        </p>
                        <p className="text-[10px] text-white/80 font-medium">System Coordinator</p>
                      </div>
-                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-lg backdrop-blur-md group-hover:border-yellow-400/50 transition-colors">
-                       <UserIcon size={18} className="text-white" />
+                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-lg backdrop-blur-md group-hover:border-yellow-400/50 transition-colors overflow-hidden">
+                       {userAccount.profileImage ? (
+                         <img src={userAccount.profileImage} alt="Avatar" className="w-full h-full object-cover" />
+                       ) : (
+                         <UserIcon size={18} className="text-white" />
+                       )}
                      </div>
                      <ChevronDown size={14} className="text-white/60 group-hover:text-white transition-colors" />
                    </div>
