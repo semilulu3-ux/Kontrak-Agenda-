@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity } from 'lucide-react';
+import { MoreHorizontal, CheckCircle, Edit, Plus, FileText, X, TrendingUp, Users, Wallet, ArrowUpRight, Globe, Activity, ShieldCheck } from 'lucide-react';
 import { UserAccount, ContractStep } from '../types';
 
 // --- Reusable Glass Card Container ---
@@ -413,7 +413,7 @@ export const AttentionCard: React.FC = () => {
   );
 };
 
-// --- 5. Statistics Card (NEW) ---
+// --- 5. Statistics Card ---
 export const StatisticsCard: React.FC = () => {
    const [showDetail, setShowDetail] = useState(false);
    const [period, setPeriod] = useState<'daily' | 'monthly' | 'yearly'>('daily');
@@ -425,7 +425,7 @@ export const StatisticsCard: React.FC = () => {
        labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
        values: [35, 50, 45, 85, 60, 90, 75], // Random looking variation for week
        income: {
-          total: 'Rp 45.5 M',
+          total: 'Rp 45.500.000',
           growth: '+5.2%',
           trend: 'Stabil',
           desc: 'Pendapatan Member Harian'
@@ -444,7 +444,7 @@ export const StatisticsCard: React.FC = () => {
        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
        values: [40, 35, 55, 70, 60, 80, 75, 90, 85, 65, 95, 100], // Random variation for year
        income: {
-          total: 'Rp 1.2 T',
+          total: 'Rp 850.500.000', // Hundreds of Millions
           growth: '+24.5%',
           trend: 'Meningkat',
           desc: 'Pendapatan Member Bulanan'
@@ -463,7 +463,7 @@ export const StatisticsCard: React.FC = () => {
        labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
        values: [25, 40, 55, 70, 85, 100], // Upward trend for years
        income: {
-          total: 'Rp 15.8 T',
+          total: 'Rp 12.500.000.000', // Billions in full format
           growth: '+142%',
           trend: 'Melonjak',
           desc: 'Pendapatan Member Tahunan'
@@ -515,7 +515,7 @@ export const StatisticsCard: React.FC = () => {
                </div>
                <span className="text-yellow-500/80 text-xs uppercase tracking-widest font-bold">Total Pendapatan Member</span>
                <div className="flex flex-col">
-                  <h4 className="text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight drop-shadow-lg truncate">
+                  <h4 className="text-2xl lg:text-3xl font-serif font-bold text-white tracking-tight drop-shadow-lg break-words">
                     {currentData.income.total}
                   </h4>
                   <div className="flex items-center gap-2 mt-2">
@@ -711,3 +711,122 @@ export const StatisticsCard: React.FC = () => {
      </>
    )
 }
+
+// --- 6. Regulations Card (New View) ---
+export const RegulationsView: React.FC = () => {
+    const rulesList = [
+      {
+        title: "Penyerahan Pesanan & Larangan Aktivitas Ilegal",
+        points: [
+          "Setiap pesanan akan dikirimkan langsung kepada pelanggan sesuai data yang terdaftar.",
+          "Bonus VIP akan otomatis ditambahkan ke akun pengguna dan dapat ditarik sesuai dengan arahan pembimbing resmi.",
+          "Dilarang keras melakukan aktivitas ilegal, termasuk namun tidak terbatas pada pencucian uang, penyalahgunaan dana, atau penarikan untuk tujuan yang tidak sah setelah pesanan dikirim.",
+          "Pengguna wajib menyelesaikan seluruh pekerjaan setelah data pesanan dimulai. Pesanan yang sedang berlangsung tidak dapat dibatalkan. Pelanggaran terhadap ketentuan ini dapat mengakibatkan pembatasan atau penangguhan hak penarikan dana."
+        ]
+      },
+      {
+        title: "Penentuan Komisi",
+        points: [
+          "Besaran komisi ditetapkan berdasarkan jenis pesanan atau tugas yang dipilih pengguna.",
+          "Sistem akan mendistribusikan tugas secara otomatis dan acak."
+        ]
+      },
+      {
+        title: "Perubahan Harga Pesanan",
+        points: [
+          "Harga pesanan dapat disesuaikan sewaktu-waktu guna meningkatkan peringkat penjualan dan memperbesar peluang memperoleh komisi optimal."
+        ]
+      },
+      {
+        title: "Proses Penarikan Dana",
+        points: [
+          "Waktu pencairan dana ke rekening pengguna berkisar antara 3–15 menit, tergantung pada antrean proses.",
+          "Dalam kondisi tertentu, pencairan dapat memakan waktu hingga 24 jam, menyesuaikan kebijakan dan kecepatan sistem perbankan."
+        ]
+      },
+      {
+        title: "Pemeriksaan Saldo Sebelum Penarikan",
+        points: [
+          "Pastikan saldo komisi telah masuk sebelum melakukan permintaan penarikan.",
+          "Dilarang melakukan permintaan penarikan berulang kali dalam waktu singkat dengan menekan tombol penarikan berkali-kali."
+        ]
+      },
+      {
+        title: "Kewajiban Penyelesaian Tugas",
+        points: [
+           "Setiap pesanan wajib diselesaikan sesuai dengan ketentuan sistem.",
+           "Jika pesanan hilang akibat kesalahan pribadi, pengguna diwajibkan melakukan proses verifikasi ulang, dan segala akibatnya menjadi tanggung jawab pengguna."
+        ]
+      },
+      {
+        title: "Penerimaan Instruksi Penarikan",
+        points: [
+           "Setelah menerima detail tugas, pengguna dianggap telah membaca, memahami, dan menyetujui seluruh prosedur penarikan dana.",
+           "Penarikan dana hanya dapat diproses setelah seluruh pesanan diselesaikan."
+        ]
+      },
+      {
+        title: "Batas Harian Tugas Pesanan",
+        points: [
+           "Setiap pengguna memiliki batas maksimal 5 tugas per hari.",
+           "Sisa tugas dapat dilanjutkan kembali pada hari berikutnya setelah batas harian tercapai."
+        ]
+      },
+      {
+         title: "Pengurangan Nilai Kredit",
+         points: [
+            "Apabila ditemukan pelanggaran terhadap peraturan selama pelaksanaan pesanan, sistem akan secara otomatis melakukan pengurangan nilai kredit akun pengguna."
+         ]
+      },
+      {
+         title: "Kewajiban Pajak",
+         points: [
+            "Apabila penghasilan pengguna melebihi batas tertentu, maka pengguna wajib memenuhi kewajiban perpajakan sesuai dengan ketentuan hukum yang berlaku di Republik Indonesia."
+         ]
+      }
+    ];
+  
+    return (
+      <div className="w-full bg-black min-h-screen text-white pb-20">
+         <div className="max-w-4xl mx-auto p-4 sm:p-8">
+            <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                   <ShieldCheck size={24} className="text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-wider uppercase mb-1">Ketentuan dan Aturan</h2>
+                  <p className="text-xs text-white/50 tracking-[0.2em] uppercase">Gucci Legal Compliance</p>
+                </div>
+            </div>
+
+            <div className="space-y-10">
+               {rulesList.map((section, idx) => (
+                  <div key={idx} className="group">
+                     <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 text-sm font-bold text-white/90 border border-white/20 group-hover:border-yellow-500 group-hover:text-yellow-500 transition-colors">
+                           {idx + 1}
+                        </span>
+                        {section.title}
+                     </h3>
+                     <ul className="space-y-4 pl-12 border-l border-white/10 ml-4">
+                        {section.points.map((point, pIdx) => (
+                           <li key={pIdx} className="text-gray-200 text-base md:text-lg leading-loose relative pl-6">
+                              <span className="absolute left-0 top-3 w-1.5 h-1.5 bg-yellow-500 rounded-full shadow-[0_0_8px_rgba(234,179,8,0.5)]"></span>
+                              {point}
+                           </li>
+                        ))}
+                     </ul>
+                  </div>
+               ))}
+            </div>
+
+            <div className="mt-16 pt-8 border-t border-white/10 text-center">
+               <p className="text-[10px] text-white/40 uppercase tracking-widest font-medium">
+                 © 2016 – 2025 Guccio Gucci S.p.A. All Rights Reserved. <br/>
+                 SIAE Licence No. 2294/I/1936 & 5647/I/193
+               </p>
+            </div>
+         </div>
+      </div>
+    );
+};

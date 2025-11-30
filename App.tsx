@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { 
@@ -5,7 +6,8 @@ import {
   RulesCard, 
   ContractStatusCard, 
   AttentionCard,
-  StatisticsCard // Import komponen baru
+  StatisticsCard,
+  RegulationsView // Import komponen baru
 } from './components/DashboardCards';
 import { UserAccount, ContractStep } from './types';
 import { Search, User as UserIcon, Menu, Bell, ChevronDown, Lock, Phone, User, ArrowRight, FileText, Banknote, Percent, X } from 'lucide-react';
@@ -318,6 +320,15 @@ const App: React.FC = () => {
     setShowContractModal(false);
   };
 
+  // Helper title for Header
+  const getHeaderTitle = () => {
+     switch(activeTab) {
+        case 'statistics': return 'STATISTIK PERFORMA';
+        case 'regulations': return 'KETENTUAN SISTEM';
+        default: return 'KONTRAK AGENDA';
+     }
+  }
+
   return (
     <div className="flex min-h-screen font-sans overflow-x-hidden relative selection:bg-yellow-500/30 selection:text-yellow-100">
       
@@ -379,7 +390,7 @@ const App: React.FC = () => {
                 {/* Logo Text Block */}
                 <div className="flex flex-col justify-center">
                   <h1 className="text-4xl md:text-5xl font-serif font-bold text-white tracking-tight leading-none mb-2 drop-shadow-xl text-shadow-lg">
-                    {activeTab === 'dashboard' ? 'KONTRAK AGENDA' : 'STATISTIK PERFORMA'}
+                    {getHeaderTitle()}
                   </h1>
                   <div className="flex items-center gap-3">
                     <span className="h-[3px] w-12 bg-[#8B0000] shadow-[0_0_8px_#8B0000]"></span>
@@ -456,6 +467,12 @@ const App: React.FC = () => {
               {activeTab === 'statistics' && (
                  <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
                     <StatisticsCard />
+                 </div>
+              )}
+              
+              {activeTab === 'regulations' && (
+                 <div className="h-full w-full animate-in fade-in slide-in-from-right-8 duration-500">
+                    <RegulationsView />
                  </div>
               )}
 

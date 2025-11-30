@@ -71,7 +71,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isOpen
             active={activeTab === 'statistics'} 
             onClick={() => handleTabClick('statistics')} 
           />
-          <SidebarIcon icon={Aperture} />
+          <SidebarIcon 
+            icon={Aperture} 
+            active={activeTab === 'regulations'} 
+            onClick={() => handleTabClick('regulations')}
+          />
           <SidebarIcon icon={Wallet} />
           <SidebarIcon icon={User} />
           <SidebarIcon icon={Settings} />
